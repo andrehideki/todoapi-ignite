@@ -10,4 +10,16 @@ describe('todos', () => {
             .expect(200);
         expect(Array.isArray(response.body)).toBeTruthy();
     });
+
+    it('Should be able to create a new todo', async () => {
+        const response = await request(app)
+            .post('/todos')
+            .set('username', 'admin')
+            .send({
+                "title": "todo",
+                "deadline": "2022-05-14"
+            })
+            .expect(201);
+            expect(validate(response.body.id)).toBeTruthy();
+    });
 });

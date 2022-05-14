@@ -7,8 +7,8 @@ describe('users', () => {
         const response = await request(app)
             .post('/users')
             .send({
-                title: 'todo',
-                deadline: '2022-05-14'
+                name: "fulano",
+                username: "fulano"
             })
             .expect(201);
         expect(validate(response.body.id)).toBeTruthy();
@@ -18,8 +18,8 @@ describe('users', () => {
         const response = await request(app)
             .post('/users')
             .send({
-                title: 'admin',
-                deadline: '2022-05-14'
+                name: 'admin',
+                username: 'admin'
             })
             .expect(400);
         expect(response.body.error).toBe('Username already exists')
