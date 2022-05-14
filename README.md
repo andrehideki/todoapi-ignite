@@ -1,11 +1,11 @@
 # Todoapi Ignite
 
 # Requirements
-    [] Create user with name and username
-    [] Create todo
-    [] Get todos
-    [] Update title and dealine of an existing todo
-    [] Set todo as completed
-    [] Delete an existing Todo
+    [X] Create user with name and username
+    [X] Create todo
+    [X] Get todos
+    [X] Update title and dealine of an existing todo
+    [X] Set todo as completed
+    [X] Delete an existing Todo
 
 # Routes
