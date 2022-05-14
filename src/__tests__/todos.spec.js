@@ -61,4 +61,11 @@ describe('todos', () => {
         expect(response.body.error).toBe('Todo not found');
     });
 
+    it('Should be able to delete a todo', async () => {
+        await request(app)
+            .delete('/todos/task')
+            .set('username', 'admin')
+            .expect(204);
+    });
+
 });
