@@ -68,4 +68,13 @@ app.patch('/todos/:id/done', (req, res) => {
     return res.status(200).send(todo);
 });
 
+app.delete('/todos/:id', (req, res) => {
+    const { id } = req.params;
+    const { user } = req;
+    const todo = user.todos.find(t => t.id === id);
+    if (!todo) return res.status(400).send({ error: 'Todo not found' });
+    user.todos.splice(todo, 1);
+    return res.status(204).send();
+});
+
 app.listen(port, () => console.log(`Application running at: ${port}`));
