@@ -28,11 +28,24 @@ app.post('/users', (req, res) => {
     return res.status(201).send(user);
 });
 
-
 app.use(getUser);
 
 app.get('/todos', (req, res) => {
     return res.json(req.user.todos);
+});
+
+app.post('/todos', (req, res) => {
+    const { title, deadline } = req.body;
+    const { user } = req;
+    const todo = {
+        id: uuidV4(),
+        title,
+        done: false,
+        deadline: new Date(deadline),
+        created_at: new Date()
+    };
+    user.todos.push(todo);
+    return res.status(201).send(todo);
 });
 
 app.listen(port, () => console.log(`Application running at: ${port}`));
