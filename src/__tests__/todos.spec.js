@@ -24,7 +24,7 @@ describe('todos', () => {
     });
 
     it('Should be able to update a todo', async () => {
-        const response = await request(app)
+        await request(app)
             .put('/todos/task')
             .set('username', 'admin')
             .send({
@@ -32,5 +32,17 @@ describe('todos', () => {
                 "deadline": "2022-05-15"
             })
             .expect(200);
+    });
+
+    it('Should not be able to update a non existing todo', async () => {
+        const response = await request(app)
+            .put('/todos/nonexisting')
+            .set('username', 'admin')
+            .send({
+                "title": "updated",
+                "deadline": "2022-05-15"
+            })
+            .expect(400);
+        expect(response.body.error).toBe('Todo not found');
     });
 });
