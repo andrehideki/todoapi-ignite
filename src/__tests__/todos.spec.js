@@ -22,4 +22,15 @@ describe('todos', () => {
             .expect(201);
             expect(validate(response.body.id)).toBeTruthy();
     });
+
+    it('Should be able to update a todo', async () => {
+        const response = await request(app)
+            .put('/todos/task')
+            .set('username', 'admin')
+            .send({
+                "title": "updated",
+                "deadline": "2022-05-15"
+            })
+            .expect(200);
+    });
 });
