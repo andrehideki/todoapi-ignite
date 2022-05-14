@@ -6,9 +6,9 @@ const app = express();
 
 app.use(express.json());
 
-function getUser(req, res, next) {
+function checkExistsUserAccount(req, res, next) {
     const { username } = req.headers;
-    if (!username) return res.status(400).send({ error: 'Username is empty' });
+    if (!username) return res.status(404).send({ error: 'Username is empty' });
     const user = users.filter(u => u.username === username)[0];
     if (!user) return res.status(400).send({ error: 'User not found' });
     req.user = user;
@@ -28,7 +28,7 @@ app.post('/users', (req, res) => {
     return res.status(201).send(user);
 });
 
-app.use(getUser);
+app.use(checkExistsUserAccount);
 
 app.get('/todos', (req, res) => {
     return res.json(req.user.todos);
