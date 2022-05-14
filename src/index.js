@@ -17,6 +17,7 @@ function getUser(req, res, next) {
 
 app.post('/users', (req, res) => {
     const { name, username } = req.body;
+    if (users.find(u => u.username === username)) return res.status(400).send({ error: 'Username already exists' });
     const user = {
         id: uuidV4(),
         name,
