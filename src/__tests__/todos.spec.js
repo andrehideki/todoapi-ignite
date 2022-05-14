@@ -68,4 +68,11 @@ describe('todos', () => {
             .expect(204);
     });
 
+    it('Should not be able to delete a non existing todo', async () => {
+        await request(app)
+            .delete('/todos/nonexisting')
+            .set('username', 'admin')
+            .expect(404);
+    });
+
 });

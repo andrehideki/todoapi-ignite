@@ -72,7 +72,7 @@ app.delete('/todos/:id', (req, res) => {
     const { id } = req.params;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
-    if (!todo) return res.status(400).send({ error: 'Todo not found' });
+    if (!todo) return res.status(404).send({ error: 'Todo not found' });
     user.todos.splice(todo, 1);
     return res.status(204).send();
 });
