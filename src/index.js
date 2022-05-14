@@ -3,7 +3,6 @@ const { v4: uuidV4 } = require('uuid');
 const { users } = require('./users');
 
 const app = express();
-const port = 3333;
 
 app.use(express.json());
 
@@ -77,4 +76,4 @@ app.delete('/todos/:id', (req, res) => {
     return res.status(204).send();
 });
 
-app.listen(port, () => console.log(`Application running at: ${port}`));
+module.exports = app;
