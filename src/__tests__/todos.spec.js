@@ -42,7 +42,16 @@ describe('todos', () => {
                 "title": "updated",
                 "deadline": "2022-05-15"
             })
-            .expect(400);
+            .expect(404);
         expect(response.body.error).toBe('Todo not found');
     });
+
+    it('Should be able to mark a todo as done', async () => {
+        await request(app)
+            .patch('/todos/task/done')
+            .set('username', 'admin')
+            .expect(200);
+    });
+
+
 });

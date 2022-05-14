@@ -53,7 +53,7 @@ app.put('/todos/:id', (req, res) => {
     const { title, deadline } = req.body;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
-    if (!todo) return res.status(400).send({ error: 'Todo not found' });
+    if (!todo) return res.status(404).send({ error: 'Todo not found' });
     todo.title = title;
     todo.deadline = new Date(deadline);
     return res.status(200).send(todo);
