@@ -53,5 +53,12 @@ describe('todos', () => {
             .expect(200);
     });
 
+    it('Should not be able to mark a non existing todo as done', async () => {
+        const response = await request(app)
+            .patch('/todos/nonexisting/done')
+            .set('username', 'admin')
+            .expect(404);
+        expect(response.body.error).toBe('Todo not found');
+    });
 
 });

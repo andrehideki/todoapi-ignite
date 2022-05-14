@@ -63,7 +63,7 @@ app.patch('/todos/:id/done', (req, res) => {
     const { id } = req.params;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
-    if (!todo) return res.status(400).send({ error: 'Todo not found' });
+    if (!todo) return res.status(404).send({ error: 'Todo not found' });
     todo.done = true;
     return res.status(200).send(todo);
 });
