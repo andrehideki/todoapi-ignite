@@ -15,6 +15,13 @@ function checkExistsUserAccount(req, res, next) {
     return next();
 }
 
+function checksCreateTodosUserAvailability(req, res, next) {
+    const { user } = req;
+    if (user.todos.length >= 10) return res.status(400).send({ error: 'The limit of available todos has passed' });
+    return next();
+}
+
+
 app.post('/users', (req, res) => {
     const { name, username } = req.body;
     if (users.find(u => u.username === username)) return res.status(400).send({ error: 'Username already exists' });
@@ -30,11 +37,11 @@ app.post('/users', (req, res) => {
 
 app.use(checkExistsUserAccount);
 
-app.get('/todos', (req, res) => {
+app.get('/todos', checkExistsUserAccount, (req, res) => {
     return res.json(req.user.todos);
 });
 
-app.post('/todos', (req, res) => {
+app.post('/todos', checkExistsUserAccount, checksCreateTodosUserAvailability, (req, res) => {
     const { title, deadline } = req.body;
     const { user } = req;
     const todo = {
@@ -48,7 +55,7 @@ app.post('/todos', (req, res) => {
     return res.status(201).send(todo);
 });
 
-app.put('/todos/:id', (req, res) => {
+app.put('/todos/:id', checkExistsUserAccount, (req, res) => {
     const { id } = req.params;
     const { title, deadline } = req.body;
     const { user } = req;
@@ -59,7 +66,7 @@ app.put('/todos/:id', (req, res) => {
     return res.status(200).send(todo);
 });
 
-app.patch('/todos/:id/done', (req, res) => {
+app.patch('/todos/:id/done', checkExistsUserAccount, (req, res) => {
     const { id } = req.params;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
@@ -68,7 +75,7 @@ app.patch('/todos/:id/done', (req, res) => {
     return res.status(200).send(todo);
 });
 
-app.delete('/todos/:id', (req, res) => {
+app.delete('/todos/:id', checkExistsUserAccount, (req, res) => {
     const { id } = req.params;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
