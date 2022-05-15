@@ -8,7 +8,7 @@ module.exports = {
             username: 'admin',
             todos: [
                 {
-                    id: 'task',
+                    id: '7edb7367-ab76-4abf-80bb-5cc1e57f99dc',
                     title: 'task',
                     done: false,
                     deadline: new Date(),

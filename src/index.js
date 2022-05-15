@@ -1,5 +1,5 @@
 const express = require('express');
-const { v4: uuidV4 } = require('uuid');
+const { v4: uuidV4, validate } = require('uuid');
 const { users } = require('./users');
 
 const app = express();
@@ -21,6 +21,16 @@ function checksCreateTodosUserAvailability(req, res, next) {
     return next();
 }
 
+function checksTodoExists(req, res, next) {
+    const { id } = req.params;
+    const isInvalidatedId = !validate(id);
+    if (isInvalidatedId) return res.status(400).send({ error: 'Todo id is invalid' });
+    const { user } = req;
+    const todo = user.todos.find(t => t.id === id);
+    if (!todo) return res.status(404).send({ error: 'Todo not found' });
+    req.todo = todo;
+    return next();
+}
 
 app.post('/users', (req, res) => {
     const { name, username } = req.body;
@@ -34,8 +44,6 @@ app.post('/users', (req, res) => {
     users.push(user);
     return res.status(201).send(user);
 });
-
-app.use(checkExistsUserAccount);
 
 app.get('/todos', checkExistsUserAccount, (req, res) => {
     return res.json(req.user.todos);
@@ -55,7 +63,7 @@ app.post('/todos', checkExistsUserAccount, checksCreateTodosUserAvailability, (r
     return res.status(201).send(todo);
 });
 
-app.put('/todos/:id', checkExistsUserAccount, (req, res) => {
+app.put('/todos/:id', checkExistsUserAccount, checksTodoExists, (req, res) => {
     const { id } = req.params;
     const { title, deadline } = req.body;
     const { user } = req;
@@ -66,7 +74,7 @@ app.put('/todos/:id', checkExistsUserAccount, (req, res) => {
     return res.status(200).send(todo);
 });
 
-app.patch('/todos/:id/done', checkExistsUserAccount, (req, res) => {
+app.patch('/todos/:id/done', checkExistsUserAccount, checksTodoExists, (req, res) => {
     const { id } = req.params;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
@@ -75,7 +83,7 @@ app.patch('/todos/:id/done', checkExistsUserAccount, (req, res) => {
     return res.status(200).send(todo);
 });
 
-app.delete('/todos/:id', checkExistsUserAccount, (req, res) => {
+app.delete('/todos/:id', checkExistsUserAccount, checksTodoExists, (req, res) => {
     const { id } = req.params;
     const { user } = req;
     const todo = user.todos.find(t => t.id === id);
