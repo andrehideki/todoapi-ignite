@@ -57,4 +57,12 @@ describe('checksTodoExists', () => {
         checksTodoExists(mockRequest, mockResponse, mockNext);
         expect(mockResponse.status).toBeCalledWith(404);
     });
+
+    it('Should not be able to put user and todo in request when todo id is not uuid', async () => {
+        const todo = createTodo();
+        user.todos.push(todo);
+        const mockRequest = createRequest({ headers: { username: user.username }, params: {id: 'not_valid_id' } })
+        checksTodoExists(mockRequest, mockResponse, mockNext);
+        expect(mockResponse.status).toBeCalledWith(400);
+    });
 });
