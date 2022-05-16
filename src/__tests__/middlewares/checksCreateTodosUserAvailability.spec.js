@@ -52,6 +52,16 @@ describe('checksCreateTodosUserAvailability', () => {
         }
         const mockRequest = createRequest({ user });
         checksCreateTodosUserAvailability(mockRequest, mockResponse, mockNext);
-        expect(mockResponse.status).toBeCalledWith(400); 
+        expect(mockResponse.status).toBeCalledWith(403); 
+    });
+
+    it('Should be able to let user create infinite new todos when is in Pro plan', async() => {
+        user.pro = true;
+        for (let i=0; i<MAX_NUMBER_OF_TODOS * MAX_NUMBER_OF_TODOS; i++) {
+            user.todos.push(createTodo());
+        }
+        const mockRequest = createRequest({ user });
+        checksCreateTodosUserAvailability(mockRequest, mockResponse, mockNext);
+        expect(mockNext).toBeCalled(); 
     });
 });
