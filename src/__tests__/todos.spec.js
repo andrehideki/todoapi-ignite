@@ -1,10 +1,11 @@
 const request = require('supertest');
 const { validate } = require('uuid');
-const app = require('../index');
+const { app } = require('../index');
 
 describe('todos', () => {
     const todoId = '7edb7367-ab76-4abf-80bb-5cc1e57f99dc';
     const notExistingId = 'bab4707a-d7b6-4add-b2d3-677d50527a3c';
+
     it('Should be able to list all user\'s todos', async () => {
         const response = await request(app)
             .get('/todos')

@@ -32,6 +32,14 @@ function checksTodoExists(req, res, next) {
     return next();
 }
 
+function findUserById(req, res, next) {
+    const { id } = req.params;
+    const user = users.find(u => u.id === id);
+    if (!user) return res.status(404).send({ error: 'User not found' });
+    req.user = user;
+    return next();
+}
+
 app.post('/users', (req, res) => {
     const { name, username } = req.body;
     if (users.find(u => u.username === username)) return res.status(400).send({ error: 'Username already exists' });
@@ -75,21 +83,24 @@ app.put('/todos/:id', checkExistsUserAccount, checksTodoExists, (req, res) => {
 });
 
 app.patch('/todos/:id/done', checkExistsUserAccount, checksTodoExists, (req, res) => {
-    const { id } = req.params;
-    const { user } = req;
-    const todo = user.todos.find(t => t.id === id);
+    const { todo } = req;
     if (!todo) return res.status(404).send({ error: 'Todo not found' });
     todo.done = true;
     return res.status(200).send(todo);
 });
 
 app.delete('/todos/:id', checkExistsUserAccount, checksTodoExists, (req, res) => {
-    const { id } = req.params;
     const { user } = req;
-    const todo = user.todos.find(t => t.id === id);
+    const todo = req;
     if (!todo) return res.status(404).send({ error: 'Todo not found' });
     user.todos.splice(todo, 1);
     return res.status(204).send();
 });
 
-module.exports = app;
+module.exports = {
+    app,
+    checkExistsUserAccount,
+    checksCreateTodosUserAvailability,
+    checksTodoExists,
+    findUserById
+};
