@@ -17,7 +17,7 @@ function checkExistsUserAccount(req, res, next) {
 
 function checksCreateTodosUserAvailability(req, res, next) {
     const { user } = req;
-    if (user.todos.length >= 10) return res.status(400).send({ error: 'The limit of available todos has passed' });
+    if (!user.pro && user.todos.length >= 10) return res.status(403).send({ error: 'The limit of available todos has passed' });
     return next();
 }
 

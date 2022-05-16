@@ -3,6 +3,8 @@ const { createTodo } = require('../builders/todo_builder');
 const { checksCreateTodosUserAvailability } = require('../../');
 const { users } = require('../../users');
 
+const MAX_NUMBER_OF_TODOS = 10;
+
 const createRequest = (params) => {
     return {...params};
 };
@@ -33,9 +35,7 @@ describe('checksCreateTodosUserAvailability', () => {
             name: 'test',
             pro: false,
             username: 'test',
-            todos: [
-                createTodo()
-            ]
+            todos: []
         }
         users.push(user);
     });
@@ -44,5 +44,14 @@ describe('checksCreateTodosUserAvailability', () => {
         const mockRequest = createRequest({ user });
         checksCreateTodosUserAvailability(mockRequest, mockResponse, mockNext);
         expect(mockNext).toBeCalled(); 
+    });
+    
+    it('Should not be able to let user create a new todo when is not Pro and already have ten todos', async() => {
+        for (let i=0; i<MAX_NUMBER_OF_TODOS; i++) {
+            user.todos.push(createTodo());
+        }
+        const mockRequest = createRequest({ user });
+        checksCreateTodosUserAvailability(mockRequest, mockResponse, mockNext);
+        expect(mockResponse.status).toBeCalledWith(400); 
     });
 });
