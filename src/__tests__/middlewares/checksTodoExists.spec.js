@@ -65,4 +65,11 @@ describe('checksTodoExists', () => {
         checksTodoExists(mockRequest, mockResponse, mockNext);
         expect(mockResponse.status).toBeCalledWith(400);
     });
+    
+    it('Should not be able to put user and todo in request when todo does not exists', async () => {
+        const notRegisteredTodo = createTodo();
+        const mockRequest = createRequest({ headers: { username: user.username }, params: {id: notRegisteredTodo.id } })
+        checksTodoExists(mockRequest, mockResponse, mockNext);
+        expect(mockResponse.status).toBeCalledWith(404);
+    });
 });
