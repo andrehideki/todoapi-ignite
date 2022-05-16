@@ -49,4 +49,12 @@ describe('checksTodoExists', () => {
         expect(validate(mockRequest.todo.id)).toBeTruthy();
         expect(mockRequest.todo.id).toBe(todo.id);
     });
+
+    it('Should not be able to put user and todo in request when user does not exists', async () => {
+        const todo = createTodo();
+        user.todos.push(todo);
+        const mockRequest = createRequest({ headers: { username: '' }, params: {id: todo.id } })
+        checksTodoExists(mockRequest, mockResponse, mockNext);
+        expect(mockResponse.status).toBeCalledWith(404);
+    });
 });
