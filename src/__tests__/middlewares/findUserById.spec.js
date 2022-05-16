@@ -1,5 +1,6 @@
 const { v4: uuidV4 } = require('uuid');
 const { createTodo } = require('../builders/todo_builder');
+const { createUser } = require('../builders/user_builder');
 const { findUserById } = require('../../');
 const { users } = require('../../users');
 const { validate } = require('uuid');
@@ -44,5 +45,12 @@ describe('findUserById', () => {
         findUserById(mockRequest, mockResponse, mockNext);
         expect(validate(mockRequest.user.id)).toBeTruthy();
         expect(mockRequest.user.id).toBe(user.id);
+    });
+
+    it('Should not be able to pass user to request.user when it does not exists', async () => {
+        const unknownId = createUser().id;
+        const mockRequest = createRequest({ params: {id: unknownId } })
+        findUserById(mockRequest, mockResponse, mockNext);
+        expect(mockResponse.status).toBeCalledWith(404);
     });
 });
