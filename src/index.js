@@ -22,10 +22,14 @@ function checksCreateTodosUserAvailability(req, res, next) {
 }
 
 function checksTodoExists(req, res, next) {
+    const { username } = req.headers;
+    if (!username) return res.status(404).send({ error: 'Username is empty' });
+    const user = users.filter(u => u.username === username)[0];
+    if (!user) return res.status(400).send({ error: 'User not found' });
+    req.user = user;
     const { id } = req.params;
     const isInvalidatedId = !validate(id);
     if (isInvalidatedId) return res.status(400).send({ error: 'Todo id is invalid' });
-    const { user } = req;
     const todo = user.todos.find(t => t.id === id);
     if (!todo) return res.status(404).send({ error: 'Todo not found' });
     req.todo = todo;
